@@ -1,0 +1,204 @@
+.av-page {
+  min-height: 100vh;
+  padding: 24px 16px;
+  background: #f3f4f6;
+  color: #111827;
+  text-align: left;
+  font-family: system-ui, sans-serif;
+}
+
+.av-user {
+  max-width: 760px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.av-user img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+.av-user-info {
+  flex: 1;
+}
+
+.av-user-info h2,
+.av-user-info p {
+  margin: 0;
+}
+
+.av-user-info h2 {
+  font-size: 1rem;
+}
+
+.av-user-info p {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.av-badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.av-badge-admin {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.av-badge-user {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.av-card {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.av-card h1 {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+}
+
+.av-card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.av-erro {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.av-aviso {
+  margin: 0 0 16px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.av-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.av-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+.av-form input,
+.av-form textarea,
+.av-form select {
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  background: #fff;
+  color: #111827;
+}
+
+.av-lista-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.av-vazio {
+  padding: 16px 0;
+  color: #6b7280;
+}
+
+.av-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.av-item {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.av-item-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.av-pessoas {
+  font-size: 0.95rem;
+}
+
+.av-data {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.av-lado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.av-nota {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.av-status {
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.av-status-ATIVA {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.av-status-CANCELADA {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.av-comentarios {
+  margin: 8px 0 0;
+  white-space: pre-wrap;
+}
+
+.av-excluir {
+  margin-top: 8px;
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}

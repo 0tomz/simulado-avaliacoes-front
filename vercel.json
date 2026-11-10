@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/avaliacoes/:path*",
+      "destination": "http://TROCAR-IP-AWS:8080/avaliacoes/:path*"
+    }
+  ]
+}

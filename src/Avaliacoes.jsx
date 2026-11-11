@@ -37,13 +37,22 @@ export default function Avaliacoes() {
         const accessToken = await getAccessTokenSilently();
         setToken(accessToken);
 
-        // Corrigido aqui: adicionado o [1] para pegar o payload real do JWT
-        const payload = accessToken.split(".")[1];
-        const decoded = JSON.parse(atob(payload));
+        // Decodificação segura contra caracteres especiais do JWT no navegador
+        const base64Url = accessToken.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          window.atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
+
+        const decoded = JSON.parse(jsonPayload);
         const roles = decoded["https://social-insper.com"] || [];
         setIsAdmin(roles.includes("ADMIN"));
       } catch (e) {
-        console.error("Erro ao buscar token:", e);
+        console.error("Erro ao decodificar token de roles:", e);
+        setIsAdmin(false);
       }
     };
 

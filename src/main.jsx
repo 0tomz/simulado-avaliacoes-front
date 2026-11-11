@@ -9,7 +9,7 @@ createRoot(document.getElementById('root')).render(
       domain="dev-zan42ozc1ik07ei1.us.auth0.com"
       clientId="64owM81PeuJacIqzgqgrMqBUkwOWmHK5"
       authorizationParams={{
-        audience: "Https://avaliacoes-api",
+        audience: "https://avaliacoes-api",
         redirect_uri: window.location.origin
       }}
     >

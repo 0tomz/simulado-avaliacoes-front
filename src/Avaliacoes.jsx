@@ -6,14 +6,13 @@ import "./Avaliacoes.css";
 
 const BASE_URL_AVALIACOES = "/api";
 
-const STATUS = ["ATIVA", "ARQUIVADA", "CANCELADA"];
-
-const FORM_VAZIO = { emailAvaliado: "", nota: "", comentarios: "", status: "ATIVA" };
+// Estados adaptados do formulário antigo para o cenário de artigos
+const FORM_VAZIO = { titulo: "", descricao: "", prioridade: "MEDIA" };
 
 function mensagemErro(status, acao) {
   if (status === 401) return "Sessão expirada ou inválida. Faça login novamente.";
   if (status === 403) return "Você não tem permissão para " + acao + " (apenas ADMIN).";
-  if (status === 404) return "Avaliação não encontrada.";
+  if (status === 404) return "Artigo não encontrado.";
   if (status === 400) return "Dados inválidos. Confira os campos e tente novamente.";
   return "Erro inesperado (" + status + ").";
 }
@@ -59,24 +58,24 @@ export default function Avaliacoes() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-
   if (!isAuthenticated) {
     return <LoginButton />;
   }
 
+  // Rota alterada para bater em /api/artigos
   async function fetchAvaliacoes() {
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch(`${BASE_URL_AVALIACOES}/avaliacoes`, {
+      const res = await fetch(`${BASE_URL_AVALIACOES}/artigos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (!res.ok) {
-        throw new Error(mensagemErro(res.status, "listar avaliações"));
+        throw new Error(mensagemErro(res.status, "listar artigos"));
       }
 
       const data = await res.json();
@@ -88,23 +87,23 @@ export default function Avaliacoes() {
     }
   }
 
+  // Envio adaptado para bater em /api/artigos enviando titulo, descricao e prioridade
   async function criarAvaliacao(e) {
     e.preventDefault();
     setEnviando(true);
     setError(null);
 
     try {
-      const res = await fetch(`${BASE_URL_AVALIACOES}/avaliacoes`, {
+      const res = await fetch(`${BASE_URL_AVALIACOES}/artigos`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          emailAvaliado: form.emailAvaliado,
-          comentarios: form.comentarios,
-          nota: form.nota === "" ? null : Number(form.nota),
-          status: form.status,
+          titulo: form.titulo,
+          descricao: form.descricao,
+          prioridade: form.prioridade,
         }),
       });
 
@@ -117,7 +116,7 @@ export default function Avaliacoes() {
             detalhe = "";
           }
         }
-        throw new Error(detalhe || mensagemErro(res.status, "cadastrar avaliações"));
+        throw new Error(detalhe || mensagemErro(res.status, "cadastrar artigos"));
       }
 
       setForm(FORM_VAZIO);
@@ -129,14 +128,15 @@ export default function Avaliacoes() {
     }
   }
 
+  // Remoção alterada para bater em /api/artigos/{id}
   async function excluirAvaliacao(id) {
-    if (!window.confirm("Deseja realmente excluir esta avaliação?")) {
+    if (!window.confirm("Deseja realmente excluir este artigo?")) {
       return;
     }
     setError(null);
 
     try {
-      const res = await fetch(`${BASE_URL_AVALIACOES}/avaliacoes/${id}`, {
+      const res = await fetch(`${BASE_URL_AVALIACOES}/artigos/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -144,7 +144,7 @@ export default function Avaliacoes() {
       });
 
       if (!res.ok) {
-        throw new Error(mensagemErro(res.status, "excluir avaliações"));
+        throw new Error(mensagemErro(res.status, "excluir artigos"));
       }
 
       await fetchAvaliacoes();
@@ -173,56 +173,44 @@ export default function Avaliacoes() {
       </header>
 
       <main className="av-card">
-        <h1>Avaliações</h1>
+        <h1>Base de Conhecimentos</h1>
 
         {error && <div className="av-erro">{error}</div>}
 
         {isAdmin ? (
           <form className="av-form" onSubmit={criarAvaliacao}>
-            <h2>Nova avaliação</h2>
+            <h2>Novo Artigo</h2>
 
             <label>
-              Email do avaliado
+              Título do Artigo
               <input
-                type="email"
+                type="text"
                 required
-                value={form.emailAvaliado}
-                onChange={(e) => atualizarCampo("emailAvaliado", e.target.value)}
+                value={form.titulo}
+                onChange={(e) => atualizarCampo("titulo", e.target.value)}
               />
             </label>
 
             <label>
-              Nota (0 a 10)
-              <input
-                type="number"
-                min="0"
-                max="10"
-                required
-                value={form.nota}
-                onChange={(e) => atualizarCampo("nota", e.target.value)}
-              />
-            </label>
-
-            <label>
-              Comentários
+              Descrição do Artigo
               <textarea
                 required
                 rows="3"
                 maxLength="1000"
-                value={form.comentarios}
-                onChange={(e) => atualizarCampo("comentarios", e.target.value)}
+                value={form.descricao}
+                onChange={(e) => atualizarCampo("descricao", e.target.value)}
               />
             </label>
 
             <label>
-              Status
+              Prioridade
               <select
-                value={form.status}
-                onChange={(e) => atualizarCampo("status", e.target.value)}
+                value={form.prioridade}
+                onChange={(e) => atualizarCampo("prioridade", e.target.value)}
               >
-                {STATUS.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
+                <option value="BAIXA">BAIXA</option>
+                <option value="MEDIA">MÉDIA</option>
+                <option value="ALTA">ALTA</option>
               </select>
             </label>
 
@@ -231,11 +219,11 @@ export default function Avaliacoes() {
             </button>
           </form>
         ) : (
-          <p className="av-aviso">Somente ADMIN pode cadastrar e excluir avaliações.</p>
+          <p className="av-aviso">Somente ADMIN pode cadastrar e excluir artigos.</p>
         )}
 
         <div className="av-lista-topo">
-          <h2>Lista de avaliações</h2>
+          <h2>Lista de artigos</h2>
           <button onClick={fetchAvaliacoes} disabled={loading}>
             Atualizar
           </button>
@@ -244,7 +232,7 @@ export default function Avaliacoes() {
         {loading ? (
           <div className="av-vazio">Carregando...</div>
         ) : avaliacoes.length === 0 ? (
-          <div className="av-vazio">Nenhuma avaliação encontrada.</div>
+          <div className="av-vazio">Nenhum artigo encontrado.</div>
         ) : (
           <ul className="av-lista">
             {avaliacoes.map((a) => (
@@ -252,18 +240,17 @@ export default function Avaliacoes() {
                 <div className="av-item-topo">
                   <div>
                     <div className="av-pessoas">
-                      <strong>{a.emailAvaliador}</strong> avaliou <strong>{a.emailAvaliado}</strong>
+                      Artigo: <strong>{a.titulo}</strong>
                     </div>
                     <div className="av-data">
-                      {a.dataAvaliacao ? new Date(a.dataAvaliacao).toLocaleString("pt-BR") : "-"}
+                      Criado por: {a.emailCriador} | {a.dataCriacao ? new Date(a.dataCriacao).toLocaleString("pt-BR") : "-"}
                     </div>
                   </div>
                   <div className="av-lado">
-                    <span className="av-nota">{a.nota}</span>
-                    <span className={`av-status av-status-${a.status}`}>{a.status}</span>
+                    <span className={`av-status av-status-ATIVA`}>{a.prioridade}</span>
                   </div>
                 </div>
-                <p className="av-comentarios">{a.comentarios}</p>
+                <p className="av-comentarios">{a.descricao}</p>
                 {isAdmin && (
                   <button
                     className="av-excluir"

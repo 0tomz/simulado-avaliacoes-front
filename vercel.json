@@ -1,12 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/avaliacoes",
-      "destination": "http://44.202.250.125:8080/avaliacoes"
-    },
-    {
-      "source": "/api/avaliacoes/:path*",
-      "destination": "http://44.202.250.125:8080/avaliacoes/:path*"
+      "source": "/api/:path*",
+      "destination": "http://44.202.250*"
     }
   ]
 }

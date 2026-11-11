@@ -6,7 +6,6 @@ import "./Avaliacoes.css";
 
 const BASE_URL_AVALIACOES = "/api";
 
-// Estados adaptados do formulário antigo para o cenário de artigos
 const FORM_VAZIO = { titulo: "", descricao: "", prioridade: "MEDIA" };
 
 function mensagemErro(status, acao) {
@@ -33,17 +32,20 @@ export default function Avaliacoes() {
   } = useAuth0();
 
   useEffect(() => {
-    const verificarRoles = (token) => {
-        try {
-          const payload = token.split(".")[1]; // Adicionado o [1] aqui para pegar o payload real do JWT
-          const decoded = JSON.parse(atob(payload));
-          const roles = decoded["https://social-insper.com"] || [];
-          setIsAdmin(roles.includes("ADMIN"));
-        } catch (e) {
-          console.error("Erro ao decodificar roles:", e);
-          setIsAdmin(false);
-        }
-      };
+    const fetchTokenAndRoles = async () => {
+      try {
+        const accessToken = await getAccessTokenSilently();
+        setToken(accessToken);
+
+        // Corrigido aqui: adicionado o [1] para pegar o payload real do JWT
+        const payload = accessToken.split(".")[1];
+        const decoded = JSON.parse(atob(payload));
+        const roles = decoded["https://social-insper.com"] || [];
+        setIsAdmin(roles.includes("ADMIN"));
+      } catch (e) {
+        console.error("Erro ao buscar token:", e);
+      }
+    };
 
     if (isAuthenticated) {
       fetchTokenAndRoles();
@@ -61,7 +63,6 @@ export default function Avaliacoes() {
     return <LoginButton />;
   }
 
-  // Rota alterada para bater em /api/artigos
   async function fetchAvaliacoes() {
     setLoading(true);
     setError(null);
@@ -86,7 +87,6 @@ export default function Avaliacoes() {
     }
   }
 
-  // Envio adaptado para bater em /api/artigos enviando titulo, descricao e prioridade
   async function criarAvaliacao(e) {
     e.preventDefault();
     setEnviando(true);
@@ -127,7 +127,6 @@ export default function Avaliacoes() {
     }
   }
 
-  // Remoção alterada para bater em /api/artigos/{id}
   async function excluirAvaliacao(id) {
     if (!window.confirm("Deseja realmente excluir este artigo?")) {
       return;

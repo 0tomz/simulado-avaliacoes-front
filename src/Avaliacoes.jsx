@@ -33,18 +33,17 @@ export default function Avaliacoes() {
   } = useAuth0();
 
   useEffect(() => {
-    const fetchTokenAndRoles = async () => {
-      try {
-        const accessToken = await getAccessTokenSilently();
-        setToken(accessToken);
-
-        const payload = JSON.parse(atob(accessToken.split(".")[1]));
-        const roles = payload["https://social-insper.com/roles"] || [];
-        setIsAdmin(roles.includes("ADMIN"));
-      } catch (e) {
-        console.error("Erro ao buscar token:", e);
-      }
-    };
+    const verificarRoles = (token) => {
+        try {
+          const payload = token.split(".")[1]; // Adicionado o [1] aqui para pegar o payload real do JWT
+          const decoded = JSON.parse(atob(payload));
+          const roles = decoded["https://social-insper.com"] || [];
+          setIsAdmin(roles.includes("ADMIN"));
+        } catch (e) {
+          console.error("Erro ao decodificar roles:", e);
+          setIsAdmin(false);
+        }
+      };
 
     if (isAuthenticated) {
       fetchTokenAndRoles();

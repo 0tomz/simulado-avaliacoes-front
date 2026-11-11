@@ -6,10 +6,10 @@ import { Auth0Provider } from '@auth0/auth0-react'
 
 createRoot(document.getElementById('root')).render(
   <Auth0Provider
-      domain="TROCAR-AUTH0-DOMAIN"
-      clientId="TROCAR-AUTH0-CLIENT-ID"
+      domain="dev-zan42ozc1ik07ei1.us.auth0.com"
+      clientId="64owM81PeuJacIqzgqgrMqBUkwOWmHK5"
       authorizationParams={{
-        audience: "TROCAR-AUTH0-AUDIENCE",
+        audience: "Https://avaliacoes-api",
         redirect_uri: window.location.origin
       }}
     >
